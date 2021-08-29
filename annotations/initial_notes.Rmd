@@ -17,7 +17,9 @@ library(stringr)
 animals <- c("jaguar", "jegue", "gato")
 
 str_detect(animals, pattern = "t")
+
 str_extract(animals, pattern = "t")
+
 str_locate(animals, pattern = "to")
 
 ```
@@ -80,8 +82,8 @@ str_extract(strings, "[1-5]")
 ```{r}
 sentence <- "This is a long sentence with a number 3 on in it"
 
-str_extract_all(sentence, "[1-2a-b]")
-str_locate_all(sentence, "[1-2a-b]")
+str_extract_all(sentence, "[1-3a-b]")
+str_locate_all(sentence, "[1-3a-b]")
 
 ```
 
@@ -98,4 +100,163 @@ This will match anything that isn't the letter a or c.
 
 ## Shorthand Char
 
-Certain character classes are 
+Certain character classes are so commonly used that they have been predefined with names. 
+
+- [:digit:]: all the digits
+- \\d: the same
+- [:alpha:]: alphabetic characters, upper and lower
+- [:alnum:]
+- [:graph:]: graphical chars, the same of [[:alnum:][:punct:]]
+- [:space:]: space, tab, newline, form, feed, carriage, \\s
+- [^[:space:]] or \\S: not a space
+
+
+```{r}
+string2 <- c("frase with a spa c e")
+
+str_extract_all(string2, pattern = "[^[:space:]]")
+str_extract_all(string2, pattern = "\\S")
+
+
+```
+
+
+## Quantifiers
+
+Specify how many times we expect something to occur using quantifiers.
+
+Notice that:
+
+- ? is a shorthand of {0, 1} => zero or one time
+- + is a shorthand of {1, } => one or more times
+- * is a shorthand of {0, } => zero or more times
+- {n} => exactly n times
+- {n, } => at least n times
+- {n, m} => between n and m times
+
+
+```{r}
+string_quant <- c("color", "colour", "colours")
+
+
+str_detect(string_quant, "colou?r[s]?")
+str_extract(string_quant, "colou?r[s]?")
+
+# extract a sequence of numbers
+string_quant_2 <- "This sentence we have some data year 1998."
+
+str_extract(string_quant_2, pattern = "\\d{4}")
+str_extract(string_quant_2, pattern = "[:digit:]{4}")
+
+```
+
+
+Sometimes we want the repetition to happen over multiple characters.
+
+
+```{r}
+# we want to stay with NA BATMAN!!!
+batman <- "NA NA NA NA NA NA NA NA NA NA NA NA NA NA BATMAN!!!"
+
+str_remove(batman, "(NA )+")
+str_remove(batman, "(NA )*(NA){1}")
+
+```
+
+By default these matches are greedy (try to match the longest string possible). We can instead make them lazy by placing a ? after. 
+
+- ??: zero or one times, prefers 0
+- *?: zero or more times, match as few times as possible
+- +?: one or more times, match as few times as possible
+- {n}? exactly n times, match as few times as possible
+- {n,}? at least n times, match as few times as possible
+- {n, m}? between n and m times, match as few times as possible but at least n
+
+```{r}
+str_extract(batman, "(NA ){3,7}")
+str_extract(batman, "(NA ){3,7}?")
+
+```
+
+
+## Anchors
+
+- ^: first element
+- $: last element
+
+_First you get the power ^ and then you get the money $_
+
+
+```{r}
+seasons <- c("The summer is hot this year",
+             "The spring is a lovely time",
+             "Winter is my favorite time of the year",
+             "Fall is a time of peace")
+str_detect(seasons, "^The")
+str_extract(seasons, "^The")
+str_extract(seasons, "year$")
+
+
+```
+
+Combining the two anchors we can get the specific word.
+
+```{r}
+string_achors <- c("data", "data-raw", "data science")
+
+str_extract(string_achors, "^data$")
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
