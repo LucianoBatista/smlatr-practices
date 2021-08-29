@@ -1,0 +1,79 @@
+---
+title: "Tokenization"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+
+# Libs
+
+```{r}
+library(tokenizers)
+library(hcandersenr)
+library(tidyverse)
+library(tidytext)
+
+```
+
+
+# What is a token?
+
+- char
+- line
+- word
+- 2 words
+
+```{r}
+the_fir_tree <- hcandersen_en %>% 
+  filter(book == "The fir tree") %>% 
+  pull(text)
+
+head(the_fir_tree, 9)
+
+```
+
+
+It is difficult to clearly define what a word is. Some lenguages like chinese do not use white spaces.
+
+```{r}
+strsplit(the_fir_tree[1:2], "[^a-zA-Z0-9]+")
+```
+
+Some word may not be wanted to split. Like some "palavra composta", or not all punctuation are important to be removed.
+
+```{r}
+# using tokenizers package
+tokenize_words(the_fir_tree[1:2])
+
+```
+
+Your choice of tokenizer will influence your results, so don't be afraid to experiment with different tokenizers or, if necessary, to write your own to fit your problem.
+
+```{r}
+tfk_token_chars <- tokenize_characters(
+  x = the_fir_tree,
+  lowercase = TRUE,
+  strip_non_alphanum = TRUE,
+  simplify = FALSE
+)
+
+tfk_token_chars[1:2]
+
+```
+
+The param `strip_non_alphanum` is used to exclude or include punctuation, spaces, chars...
+
+```{r}
+tfk_token_chars <- tokenize_characters(
+  x = the_fir_tree,
+  lowercase = TRUE,
+  strip_non_alphanum = FALSE,
+  simplify = FALSE
+)
+
+tfk_token_chars[1:2]
+
+
+```
+
